@@ -1,0 +1,15 @@
+Le produit de cette étape est :
+   * Le plan de projet initialisé à partir des éléments suivant :
+	o	Le cahier des charges du client ;
+	o	La dernière proposition commerciale et les dossiers internes qui l’accompagnent (Business plan, évaluation des risques, compte rendu de revue de proposition, DAT, SPC, contrat ou projet de contrat) ;
+	o	La note d’organisation ;
+	o	Le phasage général du projet et le macro planning qui l’accompagne, incluant les dates des réunions de comité et de revue de projet ;
+	o	Le résultat de l’analyse de risque et la stratégie choisie ;
+	o	Tout document complémentaire :
+	ð	L’organigramme du projet ;
+	ð	Le budget prévisionnel ;
+	ð	La stratégie de communication ;
+	ð	La liste des livrables ;
+	ð	Le plan d’assurance qualité ;
+	ð	La procédure de gestion de la documentation
+

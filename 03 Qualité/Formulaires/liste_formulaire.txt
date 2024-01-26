@@ -1,0 +1,6 @@
+Les modèles de formulaires ci-dessous sont disponibles sur l’Intranet  :
+·	Bilan de fin de projet
+·	Bordereau de livraison
+·	PV de recette
+·	Demande d’évolution
+·	Fiche d’anomalie
