@@ -4,6 +4,9 @@
 package Bank.Simulator;
 
 import org.junit.Test;
+
+import Banksim.App;
+
 import static org.junit.Assert.*;
 
 public class AppTest {
