@@ -1,7 +1,4 @@
-package Banksim.Back.tpe;
-
-import Banksim.Back.assets.Bank;
-import Banksim.Back.assets.Card;
+package Banksim.Back.assets;
 
 public class Terminal {
 

@@ -1,5 +1,8 @@
 package Banksim.Screen;
 
+import Banksim.Back.assets.Bank;
+import Banksim.Back.assets.Card;
+import Banksim.Back.servers.InterbankNetwork;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -17,9 +20,18 @@ public class MainScreen {
     private Button CreateAccount;
     private Button KeepAccount;
 
+    Bank sourceBank;
+
     private MainScreen() {
         super();
         text = new Text("Welcome to the Bank Simulator!\nPlease choose your Bank Account:");
+
+
+        // Create the GIECB
+        InterbankNetwork GieCB = InterbankNetwork.getInstance();
+
+        // Create a source bank
+        sourceBank = GieCB.createBank("Banque A");
 
         // Set a more appealing font
         text.setFont(Font.font("Arial", 18));
@@ -77,9 +89,16 @@ public class MainScreen {
     private void processChoice(int choice) {
         switch (choice) {
             case 1:
-                TerminalScreen terminalScreen = TerminalScreen.setScreen();
-                terminalScreen.start();
+                showAccount();
                 break;
         }
+    }
+
+    public void showAccount(){
+        // Create a card associated with the source bank
+        Card card = sourceBank.getRandomCard();
+        TerminalScreen terminalScreen = TerminalScreen.getTerminal();
+        terminalScreen.insertCard(card);
+        terminalScreen.start();
     }
 }

@@ -2,8 +2,8 @@ package Banksim.Screen;
 
 import Banksim.Back.assets.Bank;
 import Banksim.Back.assets.Card;
+import Banksim.Back.assets.Terminal;
 import Banksim.Back.servers.InterbankNetwork;
-import Banksim.Back.tpe.Terminal;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -35,25 +35,23 @@ public class TerminalScreen {
         // Create the GIECB
         InterbankNetwork GieCB = InterbankNetwork.getInstance();
 
-        // Create a source bank
-        sourceBank = GieCB.createBank("Banque A");
-
         // Create a destination bank
         destinationBank = GieCB.createBank("Banque B");
-
-        // Create a card associated with the source bank
-        card = sourceBank.getRandomCard();
 
         // Create a terminal with the destination bank
         accountID = destinationBank.getRandomAccountID();
         terminal = new Terminal(destinationBank, accountID);
     }
 
-    public static TerminalScreen setScreen() {
+    public static TerminalScreen getTerminal() {
         if (instance == null) {
             instance = new TerminalScreen();
         }
         return instance;
+    }
+
+    public void insertCard(Card card){
+        this.card = card;
     }
 
     public void start() {

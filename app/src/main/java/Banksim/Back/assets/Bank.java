@@ -59,6 +59,34 @@ public class Bank {
     public String getDatabasePath(){
         return DATABASE_PATH;
     }
+
+    public BankAccount getBankAccount(Card card){
+        String cardNumber = card.getCardNumber();
+        BankAccount bankAccount = BankAccount.getAccount(cardNumber);
+         // Find the buyer's bank account based on the card information
+         try (Connection connection = DatabaseManager.connect(DATABASE_PATH)) {
+            String query = "SELECT * FROM BankAccounts WHERE cardNumber = ?";
+    
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, cardNumber);
+    
+                ResultSet resultSet = preparedStatement.executeQuery();
+    
+                if (resultSet.next()) {
+                    bankAccount.setAccountHolderName(resultSet.getString("AccountHolderName"));
+                    bankAccount.setBalance(resultSet.getDouble("balance"));
+                    
+                } else {
+                    System.err.println("Error: Retrieving informations of the bank account from the database");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving bank account from database: " + e.getMessage());
+        }
+    
+        return bankAccount;
+    }
+
 //===========================SETTERS===================================
 
     public void setName(String Name){

@@ -1,16 +1,29 @@
 package Banksim.Back.assets;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BankAccount {
+    private static final Map<String, BankAccount> accountCache = new HashMap<>();
+
     private String accountNumber;
     private String accountHolderName;
     private double balance;
 
-    public BankAccount(String accountNumber, String accountHolderName, double initialBalance) {
+    private BankAccount(String accountNumber) {
         this.accountNumber = accountNumber;
-        this.accountHolderName = accountHolderName;
-        this.balance = initialBalance;
     }
 
+    public static BankAccount getAccount(String ID){
+        if (accountCache.containsKey(ID)) {
+            return accountCache.get(ID);
+        }
+        // If not in the cache, create a new instance, cache it, and return it
+        BankAccount newBankAccount = new BankAccount(ID);
+        accountCache.put(ID, newBankAccount);
+        return newBankAccount;
+    }
+    //==============GETTERS================
     public String getAccountNumber() {
         return accountNumber;
     }
@@ -22,14 +35,12 @@ public class BankAccount {
     public double getBalance() {
         return balance;
     }
+    //=============SETTERS================
+    public void setAccountHolderName(String Name){
+        accountHolderName = Name;
+    }
 
-    public boolean processTransaction(double amount) {
-        // Simulate processing a transaction
-        if (balance >= amount) {
-            balance -= amount;
-            return true; // Transaction successful
-        } else {
-            return false; // Insufficient funds
-        }
+    public void setBalance(double balance){
+        this.balance = balance;
     }
 }
