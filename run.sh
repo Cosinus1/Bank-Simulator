@@ -10,12 +10,12 @@ ls
 MAIN_CLASS="com.Banksim.Back.Main"
 
 # Set the classpath including the current directory, SQLite JDBC JAR, and Commons CLI JAR
-CLASSPATH=".:$SQLITE_JAR:$COMMONS_CLI_JAR:src"
+CLASSPATH=".:$SQLITE_JAR:$COMMONS_CLI_JAR"
 
 
 # Compile the Java code
-javac -cp $CLASSPATH src/main/java/com/Banksim/Back/*.java
-javac -cp $CLASSPATH src/main/java/com/Banksim/Back/*/*.java
+javac -cp $CLASSPATH app/src/main/java/com/Banksim/Back/*.java
+javac -cp $CLASSPATH app/src/main/java/com/Banksim/Back/*/*.java
 
 # Check if the compilation was successful
 if [ $? -eq 0 ]; then

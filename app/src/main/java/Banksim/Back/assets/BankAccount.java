@@ -2,6 +2,7 @@ package Banksim.Back.assets;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
 
 public class BankAccount {
     private static final Map<String, BankAccount> accountCache = new HashMap<>();
@@ -9,9 +10,11 @@ public class BankAccount {
     private String accountNumber;
     private String accountHolderName;
     private double balance;
+    private ArrayList<Transaction> paymentHistory; // Liste pour stocker l'historique des paiements
 
     private BankAccount(String accountNumber) {
         this.accountNumber = accountNumber;
+        this.paymentHistory = new ArrayList<>();
     }
 
     public static BankAccount getAccount(String ID){
@@ -35,6 +38,10 @@ public class BankAccount {
     public double getBalance() {
         return balance;
     }
+
+    public ArrayList<Transaction> getPaymentHistory(){
+        return paymentHistory;
+    }
     //=============SETTERS================
     public void setAccountHolderName(String Name){
         accountHolderName = Name;
@@ -42,5 +49,9 @@ public class BankAccount {
 
     public void setBalance(double balance){
         this.balance = balance;
+    }
+
+    public void addPayment(int amount,  String tag){
+        paymentHistory.add(new Transaction(amount, tag));
     }
 }

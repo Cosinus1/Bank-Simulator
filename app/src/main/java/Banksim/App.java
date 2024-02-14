@@ -1,6 +1,6 @@
 package Banksim;
 
-import Banksim.Screen.MainScreen;
+import Banksim.Screen.HomeScreen;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -14,7 +14,7 @@ public class App extends Application {
     public void start(Stage primaryStage) {
 
         // Create an instance of MainScreen and call its start method
-        MainScreen mainScreen = MainScreen.setScreen();
-        mainScreen.start(primaryStage);
+        HomeScreen mainScreen = HomeScreen.setScreen();
+        mainScreen.start();
     }
 }

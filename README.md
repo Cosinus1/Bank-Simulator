@@ -24,17 +24,6 @@ If you want to run the code using Gradle, follow these steps:
 ./gradlew app:run
 ```
 
-### Using Bash Script
-
-If you just want to run the backend of the project, you can use the provided `run.sh` script. Follow these steps:
-
-1. Open a terminal.
-2. Navigate to the project directory.
-3. Run the following command:
-
-```bash
-./run.sh
-```
 
 ## Additional Information
 

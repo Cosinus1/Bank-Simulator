@@ -27,7 +27,6 @@ public class TerminalScreen {
     private Card card;
     private int transactionCode; //Error Code for TransactionScreen
 
-    private Bank sourceBank;
     private Bank destinationBank;
     private String accountID;
 
@@ -120,6 +119,7 @@ public class TerminalScreen {
             transactionCode = terminal.processTransaction(card);
             TransactionScreen transactionScreen = new TransactionScreen(transactionCode, card);
             transactionScreen.start();
+            terminalStage.close();
 
         }
     

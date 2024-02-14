@@ -5,20 +5,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import Banksim.Back.assets.Bank;
 import Banksim.Back.assets.Card;
+import Banksim.Back.assets.Log;
 import Banksim.Back.database.DatabaseManager;
 
 public class InterbankNetwork {
     private static InterbankNetwork instance;
     private String DATABASE_PATH;
     private int CurrentCode;
+    private ArrayList<Log> Logs;
+
 
     private InterbankNetwork() {
         // Singleton
         DATABASE_PATH = "src/main/resources/sql/database_giecb.db";
         CurrentCode = 001;
+        Logs = new ArrayList<>();
         initializeDatabase();
     }
     
@@ -29,23 +34,33 @@ public class InterbankNetwork {
         return instance;
     }
 
-    public int routeRequest(Card card) {
+    public int routeRequest(Card card, String AccountID) {
+        //add log
+        Log log1 = new Log("Request transfer from Bank" + String.format("1f", AccountID), card.getCardNumber());
+        Logs.add(log1);
         String buyerBankID = extractBankID(card);
-        Bank buyerBank = findBuyerBank(buyerBankID);
+        Bank buyerBank = findBank(buyerBankID);
 
         if (buyerBank != null) {
-            return buyerBank.processBuyerTransaction(card);
+            //add log
+            Log log2 = new Log("Request transfer into " + AccountID, card.getCardNumber());
+            Logs.add(log2);
+            return buyerBank.processBuyerTransaction(card, AccountID);
         } else {
             System.out.println("Error: Buyer's bank not found.");
             return 1;
         }
     }
 
+    public String getDatabasePath(){
+        return DATABASE_PATH;
+    }
+
     private String extractBankID(Card card) {
         return card.getCardNumber().substring(0, 3);
     }
 
-    private Bank findBuyerBank(String bankID) {
+    private Bank findBank(String bankID) {
         System.out.println("retrieving bank : " + bankID + " from GieCB Database...");
         Bank bank = retrieveBankFromDatabase(bankID);
 
@@ -56,7 +71,7 @@ public class InterbankNetwork {
         return bank;
     }
 
-    private Bank retrieveBankFromDatabase(String bankID) {
+    public Bank retrieveBankFromDatabase(String bankID) {
         // Check if the bank is already in the cache
         Bank cachedBank = Bank.getBank(bankID);
         if (cachedBank != null) {
@@ -145,4 +160,9 @@ public class InterbankNetwork {
 
         DatabaseManager.closeConnection(connection);
     }
+
+    public ArrayList<Log> getLogs(){
+        return Logs;
+    }
+
 }

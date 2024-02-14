@@ -18,13 +18,13 @@ public class DatabaseManager {
             classLoader.loadClass(SQLITE_DRIVER_PATH);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            throw new RuntimeException("Error loading SQLite JDBC driver: " + e.getMessage());
+            throw new RuntimeException("Error loading SQLite driver: " + e.getMessage());
         }
     }
 
     public static Connection connect(String DATABASE_PATH) {
         try {
-            // Explicitly load the SQLite JDBC driver (optional, try with and without)
+           //Load Driver Class for error case 
             Class.forName(SQLITE_DRIVER_PATH);
     
             String jdbcUrl = "jdbc:sqlite:" + DATABASE_PATH;
@@ -39,20 +39,21 @@ public class DatabaseManager {
 
     public static void initializeBankDatabase(Connection connection, String ID) {
         try {
-            // Drop BankAccounts table if it exists
-            String dropBankAccountsTable = "DROP TABLE IF EXISTS BankAccounts";
-            connection.createStatement().executeUpdate(dropBankAccountsTable);
+            //Drop for other simulations
+                // Drop BankAccounts table if it exists
+                String dropBankAccountsTable = "DROP TABLE IF EXISTS BankAccounts";
+                connection.createStatement().executeUpdate(dropBankAccountsTable);
 
-            // Drop Card table if it exists
-            String dropCardTable = "DROP TABLE IF EXISTS Card";
-            connection.createStatement().executeUpdate(dropCardTable);
+                // Drop Card table if it exists
+                String dropCardTable = "DROP TABLE IF EXISTS Card";
+                connection.createStatement().executeUpdate(dropCardTable);
 
             // Initialize BankAccounts table
             String createBankAccountsTable = "CREATE TABLE IF NOT EXISTS BankAccounts (" +
                     "accountID VARCHAR(20) PRIMARY KEY, " +
                     "accountHolderName VARCHAR(50), " +
                     "balance DECIMAL(10, 2), " +
-                    "cardNumber VARCHAR(16)" +  // Add cardNumber column
+                    "cardNumber VARCHAR(16)" + 
                     ")";
             connection.createStatement().executeUpdate(createBankAccountsTable);
             System.out.println("BankAccounts table initialized");
@@ -66,23 +67,24 @@ public class DatabaseManager {
             connection.createStatement().executeUpdate(createCardTable);
             System.out.println("Card table initialized");
 
-            // Insert random bank accounts and associate cards
+            // Insert random bank accounts and associated cards (2 tables)
             Random random = new Random();
-            for (int i = 1; i <= 10; i++) {
+            for (int i = 1; i < 10; i++) {
                 String accountID = ID + i;
                 String accountHolder = "Account Holder " + i;
-                double balance = 1000.0 + random.nextDouble() * 9000.0; // Random balance between 1000 and 10000
+                double balance = 1000.0 + random.nextDouble() * 9000.0;
+                String formattedbalance = String.format("%.3f", balance);
 
                 String insertQuery = "INSERT INTO BankAccounts (accountID, accountHolderName, balance, cardNumber) VALUES (?, ?, ?, ?)";
                 PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
                 preparedStatement.setString(1, accountID);
                 preparedStatement.setString(2, accountHolder);
-                preparedStatement.setDouble(3, balance);
+                preparedStatement.setString(3, formattedbalance);
 
                 // Generate and associate a random card with each bank account
                 String cardNumber = generateRandomCardNumber(ID);
-                String expirationDate = "09/24";  // Replace with your logic for expiration date
-                int pin = 1234;  // Replace with your logic for generating a pin
+                String expirationDate = "09/24";  
+                int pin = 1234; 
 
                 preparedStatement.setString(4, cardNumber);
 
@@ -131,7 +133,7 @@ public class DatabaseManager {
         }
     }
     
-    // Helper method to insert card details into Card table
+    //Insert card details into Card table
     private static void insertCardDetails(Connection connection, String cardNumber, String expirationDate, int pin) throws SQLException {
         String insertCardQuery = "INSERT INTO Card (cardNumber, expirationDate, pin) VALUES (?, ?, ?)";
         PreparedStatement cardStatement = connection.prepareStatement(insertCardQuery);
@@ -141,7 +143,7 @@ public class DatabaseManager {
         cardStatement.executeUpdate();
     }
 
-    // Helper method to generate a random 16-digit card number
+    //Generate a random card number
     private static String generateRandomCardNumber(String bankID) {
         Random random = new Random();
         StringBuilder cardNumberBuilder = new StringBuilder(bankID);
@@ -159,4 +161,49 @@ public class DatabaseManager {
             System.err.println("Error closing the database connection: " + e.getMessage());
         }
     }
+    //========================================DISPLAY===============================================
+    // Retrieve and display the bank accounts
+    public static String printBankDatabase(Connection connection){
+        StringBuilder databaseString = new StringBuilder("Database : \n");
+        try{
+            String selectQuery = "SELECT accountID, accountHolderName, balance, cardNumber FROM BankAccounts";
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String accountID = resultSet.getString("accountID");
+                String accountHolder = resultSet.getString("accountHolderName");
+                double balance = resultSet.getDouble("balance");
+                String cardNumber = resultSet.getString("cardNumber");
+
+                databaseString.append("| Account ID: " + accountID + ", Holder: " + accountHolder + ", Balance: " + balance + ", CardNumber: " + cardNumber + " |\n");
+            }
+        }
+        catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return databaseString.toString();
+
+    }
+    // Retrieve and display the banks
+    public static String printGieCBDatabase(Connection connection){
+        StringBuilder databaseString = new StringBuilder("Database : \n");
+        try{
+            String selectQuery = "SELECT bankID, bankName FROM Banks";
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String bankID = resultSet.getString("bankID");
+                String bankName = resultSet.getString("bankName");
+
+                databaseString.append("| bank ID: " + bankID + ", bank Name: " + bankName + " |\n");
+            }
+        }
+        catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return databaseString.toString();
+    }
+    
 }

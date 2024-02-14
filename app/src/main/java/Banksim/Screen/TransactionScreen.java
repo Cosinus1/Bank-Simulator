@@ -65,8 +65,10 @@ public class TransactionScreen {
         // Add button to see transaction details
         Button seeDetailsButton = new Button("See Transaction Details");
         seeDetailsButton.setOnAction(e -> {
-            // Close the success stage after showing details
+            // Close the success stage and show TransactionRoute Details
             successStage.close();
+            TransactionRouteScreen transactionRouteScreen = new TransactionRouteScreen();
+            transactionRouteScreen.start();
         });
         GridPane.setConstraints(seeDetailsButton, 1, 2);
         GridPane.setHalignment(seeDetailsButton, HPos.CENTER);
@@ -94,10 +96,17 @@ public class TransactionScreen {
         failText.setFont(Font.font("Arial", 18));
         GridPane.setConstraints(failText, 1, 1, 3, 1);
         GridPane.setHalignment(failText, HPos.CENTER);
+        //Add back button
+        Button backButton = new Button("Back");
 
-        grid.getChildren().addAll(failText);
+        backButton.setOnAction(e -> {
+            AccountScreen.setScreen(null, null).showAccount();
+            failStage.close();
+        });
 
-        Scene failScene = new Scene(grid, 300, 100);
+        grid.getChildren().addAll(failText, backButton);
+
+        Scene failScene = new Scene(grid, 500, 100);
         failStage.setScene(failScene);
         failStage.show();
     }

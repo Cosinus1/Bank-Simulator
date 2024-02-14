@@ -2,12 +2,12 @@ package Banksim.Back.assets;
 
 import Banksim.Back.database.DatabaseManager;
 import Banksim.Back.servers.InterbankNetwork;
-import Banksim.Screen.BankScreen;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,14 +19,15 @@ public class Bank {
     private String ID;
     private String Name;
 
-    public BankScreen bankScreen;
+    private ArrayList<Log> Logs;
+    
 
     private Bank(String databasePath, String ID) {
         this.ID = ID;
         this.DATABASE_PATH = databasePath;
+        this.Logs = new ArrayList<>();
         // Initialize bank accounts from the database
         initializeDatabase();
-        this.bankScreen = new BankScreen(this);
     }
 
     public static Bank newBank(String DATABASE_PATH, String ID, String Name) {
@@ -60,8 +61,11 @@ public class Bank {
         return DATABASE_PATH;
     }
 
-    public BankAccount getBankAccount(Card card){
-        String cardNumber = card.getCardNumber();
+    public ArrayList<Log> getLogs(){
+        return Logs;
+    }
+
+    public BankAccount getBankAccount(String cardNumber){
         BankAccount bankAccount = BankAccount.getAccount(cardNumber);
          // Find the buyer's bank account based on the card information
          try (Connection connection = DatabaseManager.connect(DATABASE_PATH)) {
@@ -98,18 +102,24 @@ public class Bank {
     }
 
     public int routeRequest(Card card, String AccountID) {
-        //Display BankScreen
-        bankScreen.start();
+        //Add log
+        Log log1 = new Log("Payment Request from Terminal", card.getCardNumber());
+        Logs.add(log1);
         // Redirect the transaction to GieCB (AcquisitionServer and AuthorizationServer)
         InterbankNetwork gieCB = InterbankNetwork.getInstance();
-        int authorizationResult = gieCB.routeRequest(card);
+        int authorizationResult = gieCB.routeRequest(card, AccountID);
+        Log log2 = new Log("Request transfer into " + AccountID, card.getCardNumber());
+        Logs.add(log2);
         if(authorizationResult == 0){
             return processReceiverTransaction(card, AccountID);
         }else return authorizationResult;
     }
 
-    public int processBuyerTransaction(Card card) {
+    public int processBuyerTransaction(Card card, String AccountID) {
         // Simulate processing a transaction on the buyer's account
+        //add log
+        Log log = new Log("Request transfer from GieCB", card.getCardNumber());
+        Logs.add(log);
         String cardNumber = card.getCardNumber();
         int amount = card.getTransaction();
         // Find the buyer's bank account based on the card information
@@ -137,6 +147,7 @@ public class Bank {
     
                             if (rowsAffected > 0) {
                                 System.out.println("Transaction processed successfully for buyer. New balance: " + balance);
+                                getBankAccount(card.getCardNumber()).addPayment(-amount, AccountID);
                                 return 0;
                             } else {
                                 System.err.println("Error updating balance in the database");
@@ -158,9 +169,12 @@ public class Bank {
     
         return 2;
     }
-    private int processReceiverTransaction(Card card, String accountID) {
+    private int processReceiverTransaction(Card buyerCard, String accountID) {
+        //add log
+        Log log = new Log("transfer into " + accountID, buyerCard.getCardNumber());
+        Logs.add(log);
         // Simulate processing a transaction on the buyer's account
-        int amount = card.getTransaction();
+        int amount = buyerCard.getTransaction();
     
         try (Connection connection = DatabaseManager.connect(DATABASE_PATH)) {
             // Find the receiver's bank account based on the card information
@@ -172,14 +186,17 @@ public class Bank {
     
                 if (resultSet.next()) {
                     int Balance = resultSet.getInt("balance");
+                    String receiverCard = resultSet.getString("cardNumber");
 
                         // Update the receiver's balance in the database
                         int newBalance = Balance + amount;
-                        String updateQuery = "UPDATE BankAccounts SET balance = ?";
+                        String updateQuery = "UPDATE BankAccounts SET balance = ? WHERE accountID = ?";
                         try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
                             updateStatement.setDouble(1, newBalance);
+                            updateStatement.setString(2, accountID);
         
                             System.out.println("Transaction processed successfully for Receiver. New balance: " + newBalance);
+                            getBankAccount(receiverCard).addPayment(amount, buyerCard.getCardNumber());;
                             return 0;
                         }catch (SQLException e) {
                             System.err.println("Error Updating the Balance: " + e.getMessage());
