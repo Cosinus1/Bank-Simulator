@@ -13,14 +13,13 @@ import Banksim.Back.assets.Log;
 import Banksim.Back.database.DatabaseManager;
 
 public class InterbankNetwork {
-    private static InterbankNetwork instance;
+    private static InterbankNetwork instance; //Singleton
     private String DATABASE_PATH;
     private int CurrentCode;
     private ArrayList<Log> Logs;
 
 
     private InterbankNetwork() {
-        // Singleton
         DATABASE_PATH = "src/main/resources/sql/database_giecb.db";
         CurrentCode = 001;
         Logs = new ArrayList<>();

@@ -10,7 +10,7 @@ public class BankAccount {
     private String accountNumber;
     private String accountHolderName;
     private double balance;
-    private ArrayList<Transaction> paymentHistory; // Liste pour stocker l'historique des paiements
+    private ArrayList<Transaction> paymentHistory;
 
     private BankAccount(String accountNumber) {
         this.accountNumber = accountNumber;
@@ -51,7 +51,7 @@ public class BankAccount {
         this.balance = balance;
     }
 
-    public void addPayment(int amount,  String tag){
+    public void addPayment(double amount,  String tag){
         paymentHistory.add(new Transaction(amount, tag));
     }
 }

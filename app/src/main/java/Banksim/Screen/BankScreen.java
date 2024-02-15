@@ -42,8 +42,6 @@ public class BankScreen {
         Text Database = new Text(DatabaseManager.printBankDatabase(DatabaseManager.connect(bank.getDatabasePath())));
         GridPane.setConstraints(Database, 0, 3);
         //Logs to String
-
-        // Display Payment History
         ArrayList<Log> Logs = bank.getLogs();
         StringBuilder LogsString = new StringBuilder("-------Logs------- :\n");
         for (Log log : Logs) {

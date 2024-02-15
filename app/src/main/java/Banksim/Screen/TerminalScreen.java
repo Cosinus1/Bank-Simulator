@@ -103,7 +103,7 @@ public class TerminalScreen {
     private void validateAmount() {
         if (!amountField.getText().isEmpty()) {
             //Store in Terminal
-            terminal.setAmount(Integer.parseInt(amountField.getText()));
+            terminal.setAmount(Double.parseDouble(amountField.getText()));
             // Amount is valid, enable PIN entry
             amountField.setDisable(true);
             validateAmountButton.setDisable(true);

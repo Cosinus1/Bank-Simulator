@@ -65,15 +65,15 @@ public class HomeScreen {
 
         // Add the Buttons and center them below the text
         RandomAccount.setOnAction(e -> processChoice(1));
-        GridPane.setConstraints(RandomAccount, 1, 2); // centered below the text
+        GridPane.setConstraints(RandomAccount, 1, 2);
         GridPane.setHalignment(RandomAccount, HPos.CENTER);
 
         CreateAccount.setOnAction(e -> processChoice(2));
-        GridPane.setConstraints(CreateAccount, 2, 2); // centered below the text
+        GridPane.setConstraints(CreateAccount, 2, 2);
         GridPane.setHalignment(CreateAccount, HPos.CENTER);
 
         KeepAccount.setOnAction(e -> processChoice(3));
-        GridPane.setConstraints(KeepAccount, 3, 2); // centered below the text
+        GridPane.setConstraints(KeepAccount, 3, 2);
         GridPane.setHalignment(KeepAccount, HPos.CENTER);
 
         grid.getChildren().addAll(text, RandomAccount, CreateAccount, KeepAccount);

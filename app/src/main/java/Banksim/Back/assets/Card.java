@@ -4,7 +4,7 @@ public class Card {
     private String cardNumber;
     private String expirationDate;
     private String pin;
-    private int transaction;
+    private double transaction;
 
     public Card(String cardNumber, String expirationDate, String pin) {
         this.cardNumber = cardNumber;
@@ -24,11 +24,11 @@ public class Card {
         return pin;
     }
     
-    public int getTransaction(){
+    public double getTransaction(){
         return transaction;
     }
 
-    public void processTransaction(int amount){
+    public void processTransaction(double amount){
         transaction = amount;
     }
 }

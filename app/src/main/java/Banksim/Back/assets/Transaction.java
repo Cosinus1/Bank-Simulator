@@ -3,18 +3,18 @@ package Banksim.Back.assets;
 import java.time.LocalDate;
 
 public class Transaction {
-    private int amount;
+    private double amount;
     private String tag;
     private LocalDate date;
 
-    public Transaction(int amount, String tag) {
+    public Transaction(double amount, String tag) {
         this.amount = amount;
         this.tag = tag;
-        this.date = LocalDate.now(); // Capture the current date
+        this.date = LocalDate.now();
     }
 
-    // Getter methods for amount, receiver, and date
-    public int getAmount() {
+//==============GETTERS===================
+    public double getAmount() {
         return amount;
     }
 
@@ -27,7 +27,7 @@ public class Transaction {
     }
 
     public String show(){
-        if (amount<0) return String.format("Amount: %d, Destination: %s, Date: %s", amount, tag, date);
-        else return String.format("Amount: %d, Source: %s, Date: %s", amount, tag, date);
+        if (amount<0) return String.format("Amount: %f, Destination: %s, Date: %s", amount, tag, date);
+        else return String.format("Amount: %.2f, Source: %s, Date: %s", amount, tag, date);
     }
 }

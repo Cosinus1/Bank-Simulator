@@ -21,7 +21,7 @@ public class AccountScreen {
     private Card card;
     private Bank bank;
 
-    private AccountScreen(Card card, Bank bank){ // Create the Account Screen
+    private AccountScreen(Card card, Bank bank){
         accountStage = new Stage();
         accountStage.setTitle("BankSim : Your Account");
 
@@ -46,7 +46,7 @@ public class AccountScreen {
     
 
      public void showAccount() {
-        // Get Account information from the card :
+        // Get Account information from the card
         BankAccount bankAccount = bank.getBankAccount(card.getCardNumber());
     
         GridPane grid = new GridPane();
@@ -74,7 +74,7 @@ public class AccountScreen {
         grid.setVgap(8);
         grid.setHgap(10);
     
-        // Ajouter les éléments au grid
+        // Add elements to the grid
         GridPane.setConstraints(text, 1, 1, 3, 1);
         GridPane.setHalignment(text, HPos.CENTER);
         

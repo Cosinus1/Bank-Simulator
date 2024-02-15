@@ -121,7 +121,7 @@ public class Bank {
         Log log = new Log("Request transfer from GieCB", card.getCardNumber());
         Logs.add(log);
         String cardNumber = card.getCardNumber();
-        int amount = card.getTransaction();
+        double amount = card.getTransaction();
         // Find the buyer's bank account based on the card information
         try (Connection connection = DatabaseManager.connect(DATABASE_PATH)) {
             String query = "SELECT * FROM BankAccounts WHERE cardNumber = ?";
@@ -174,7 +174,7 @@ public class Bank {
         Log log = new Log("transfer into " + accountID, buyerCard.getCardNumber());
         Logs.add(log);
         // Simulate processing a transaction on the buyer's account
-        int amount = buyerCard.getTransaction();
+        double amount = buyerCard.getTransaction();
     
         try (Connection connection = DatabaseManager.connect(DATABASE_PATH)) {
             // Find the receiver's bank account based on the card information
@@ -189,7 +189,7 @@ public class Bank {
                     String receiverCard = resultSet.getString("cardNumber");
 
                         // Update the receiver's balance in the database
-                        int newBalance = Balance + amount;
+                        double newBalance = Balance + amount;
                         String updateQuery = "UPDATE BankAccounts SET balance = ? WHERE accountID = ?";
                         try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
                             updateStatement.setDouble(1, newBalance);

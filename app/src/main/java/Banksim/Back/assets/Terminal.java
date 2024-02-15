@@ -4,7 +4,7 @@ public class Terminal {
 
     private Bank bank;
     private String accountID;
-    private int amount;
+    private double amount;
 
 
     public Terminal(Bank bank, String accountID) {
@@ -15,10 +15,10 @@ public class Terminal {
 
     }
 
-    public int getAmount(){
+    public double getAmount(){
         return amount;
     }
-    public void setAmount(int amount){
+    public void setAmount(double amount){
         this.amount = amount;
     }
 
